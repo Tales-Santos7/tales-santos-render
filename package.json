@@ -1,0 +1,41 @@
+{
+    "name": "br.com.talesjs.talesjs",
+    "displayName": "Tales Santos | Desenvolvedor",
+    "version": "1.0.0",
+    "description": "Aplicação com integração Stripe e Cordova.",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+      "ecosystem:cordova",
+      "stripe",
+      "express",
+      "pix",
+      "checkout"
+    ],
+    "author": "Tales Santos",
+    "license": "Apache-2.0",
+    "devDependencies": {
+      "cordova-android": "^13.0.0"
+    },
+    "dependencies": {
+      "@emailjs/browser": "^4.4.1",
+      "axios": "^1.9.0",
+      "cors": "^2.8.5",
+      "dotenv": "^16.5.0",
+      "emailjs-com": "^3.2.0",
+      "express": "^5.1.0",
+      "stripe": "^18.0.0"
+    },
+    "cordova": {
+      "platforms": [
+        "android"
+      ],
+      "plugins": {
+        "cordova-plugin-splashscreen": {}
+      }
+    }
+  }
+  
