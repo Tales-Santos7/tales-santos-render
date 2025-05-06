@@ -10,6 +10,14 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors()); 
 
+// Servir arquivos estáticos da pasta atual
+app.use(express.static(path.join(__dirname)));
+
+// Rota para servir o index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.post('/criar-fatura', async (req, res) => {
   console.log('Corpo da requisição recebido:', req.body);
   const { productId, externalId, amount, customer, productName, productFile } = req.body;
@@ -79,10 +87,6 @@ app.get('/validar-token', (req, res) => {
   } else {
     res.status(404).json({ error: 'Token inválido' });
   }
-});
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.listen(PORT, () => {
