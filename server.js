@@ -66,6 +66,9 @@ app.post("/criar-fatura", async (req, res) => {
           pending: `https://talessantos-mu.vercel.app/pendente.html`,
         },
         auto_return: "approved",
+        metadata: {
+          token: token,
+        },
       },
     });
 
@@ -122,18 +125,14 @@ app.post("/webhook-mercadopago", async (req, res) => {
       const status = response.data.status;
 
       if (status === "approved") {
-        console.log("Pagamento aprovado:", response.data);
-
-        // PROCURA O TOKEN correspondente ao arquivo comprado
+        const token = response.data.metadata?.token; // <-- Ponto importante
         const tokens = lerTokens();
-        const produto = Object.entries(tokens).find(
-          ([_, p]) => p.email === response.data.payer.email
-        );
+        const dados = tokens[token];
 
-        if (produto) {
-          const [token, dados] = produto;
-
-          // ENVIA EMAIL COM EMAILJS
+        if (!dados) {
+          console.warn("Token não encontrado:", token);
+        } else {
+          // Envia o email automático com link de download
           await emailjs.send(
             process.env.EMAILJS_SERVICE_ID,
             process.env.EMAILJS_TEMPLATE_ID,
@@ -148,8 +147,6 @@ app.post("/webhook-mercadopago", async (req, res) => {
           );
 
           console.log("Email enviado com sucesso para", dados.email);
-        } else {
-          console.warn("Produto não encontrado com o email do comprador");
         }
       }
     } catch (err) {
