@@ -112,6 +112,7 @@ app.post("/webhook-mercadopago", (req, res) => {
   }
 
   res.sendStatus(200); // Sempre responde para o MP não tentar de novo
+  console.log("Recebido webhook:", req.body);
 });
 
 app.get("/verificar-pagamento", async (req, res) => {
@@ -142,8 +143,6 @@ app.get("/validar-token", (req, res) => {
     res.status(404).json({ error: "Token inválido" });
   }
 });
-
-console.log("Recebido webhook:", req.body);
 
 app.use(
   cors({
