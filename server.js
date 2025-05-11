@@ -143,6 +143,8 @@ app.get("/validar-token", (req, res) => {
   }
 });
 
+console.log("Recebido webhook:", req.body);
+
 app.use(
   cors({
     origin: "https://tales-santos-backend.onrender.com/", // Substitua pelo domínio correto do seu frontend
