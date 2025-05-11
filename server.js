@@ -35,7 +35,8 @@ app.post("/criar-fatura", async (req, res) => {
       body: {
         items: [
           {
-            notification_url: "https://tales-santos-backend.onrender.com/webhook-mercadopago",
+            notification_url:
+              "https://tales-santos-backend.onrender.com/webhook-mercadopago",
             title: productName,
             quantity: 1,
             unit_price: Number(amount) / 100,
@@ -113,6 +114,24 @@ app.post("/webhook-mercadopago", (req, res) => {
   res.sendStatus(200); // Sempre responde para o MP não tentar de novo
 });
 
+app.get("/verificar-pagamento", async (req, res) => {
+  const paymentId = req.query.paymentId;
+  try {
+    const response = await axios.get(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.MERCADOPAGO_TOKEN}`,
+        },
+      }
+    );
+
+    res.json({ status: response.data.status });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao verificar pagamento" });
+  }
+});
+
 app.get("/validar-token", (req, res) => {
   const token = req.query.token;
   const produto = tokensSalvos[token];
@@ -131,5 +150,7 @@ app.use(
 );
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta https://tales-santos-backend.onrender.com/`);
+  console.log(
+    `Servidor rodando na porta https://tales-santos-backend.onrender.com/`
+  );
 });
