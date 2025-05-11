@@ -7,6 +7,7 @@ const tokensSalvos = {};
 const fs = require("fs");
 const path = require("path");
 const TOKEN_FILE = path.join(__dirname, "tokens.json");
+const emailjs = require("emailjs-com");
 const { MercadoPagoConfig, Preference } = require("mercadopago");
 const PORT = process.env.PORT || 3000;
 
@@ -102,34 +103,61 @@ app.post("/criar-fatura", async (req, res) => {
   }
 });
 
-app.post("/webhook-mercadopago", (req, res) => {
+app.post("/webhook-mercadopago", async (req, res) => {
   const pagamento = req.body;
 
   if (pagamento.type === "payment") {
     const paymentId = pagamento.data.id;
 
-    // Buscar o pagamento detalhado
-    axios
-      .get(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-        headers: {
-          Authorization: `Bearer ${process.env.MERCADOPAGO_TOKEN}`,
-        },
-      })
-      .then((response) => {
-        const status = response.data.status;
-
-        if (status === "approved") {
-          console.log("Pagamento aprovado:", response.data);
-          // Aqui você pode liberar o download ou atualizar o token salvo como "pago"
+    try {
+      const response = await axios.get(
+        `https://api.mercadopago.com/v1/payments/${paymentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.MERCADOPAGO_TOKEN}`,
+          },
         }
-      })
-      .catch((err) =>
-        console.error("Erro ao verificar pagamento:", err.message)
       );
+
+      const status = response.data.status;
+
+      if (status === "approved") {
+        console.log("Pagamento aprovado:", response.data);
+
+        // PROCURA O TOKEN correspondente ao arquivo comprado
+        const tokens = lerTokens();
+        const produto = Object.entries(tokens).find(
+          ([_, p]) => p.email === response.data.payer.email
+        );
+
+        if (produto) {
+          const [token, dados] = produto;
+
+          // ENVIA EMAIL COM EMAILJS
+          await emailjs.send(
+            process.env.EMAILJS_SERVICE_ID,
+            process.env.EMAILJS_TEMPLATE_ID,
+            {
+              from_name: "Tales Santos",
+              to_email: dados.email,
+              reply_to: dados.email,
+              produto_nome: dados.nome,
+              link_download: dados.arquivo,
+            },
+            { publicKey: process.env.EMAILJS_PUBLIC_KEY }
+          );
+
+          console.log("Email enviado com sucesso para", dados.email);
+        } else {
+          console.warn("Produto não encontrado com o email do comprador");
+        }
+      }
+    } catch (err) {
+      console.error("Erro ao processar webhook:", err.message);
+    }
   }
 
-  res.sendStatus(200); // Sempre responde para o MP não tentar de novo
-  console.log("Recebido webhook:", req.body);
+  res.sendStatus(200);
 });
 
 app.get("/verificar-pagamento", async (req, res) => {
@@ -151,8 +179,9 @@ app.get("/verificar-pagamento", async (req, res) => {
 });
 
 app.get("/validar-token", (req, res) => {
+  const token = req.query.token; // <-- esta linha estava faltando!
   const tokens = lerTokens();
-const produto = tokens[token];
+  const produto = tokens[token];
 
   if (produto) {
     res.json(produto);
