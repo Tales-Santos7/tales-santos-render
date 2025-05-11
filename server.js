@@ -4,6 +4,9 @@ const cors = require("cors");
 require("dotenv").config();
 const app = express();
 const tokensSalvos = {};
+const fs = require("fs");
+const path = require("path");
+const TOKEN_FILE = path.join(__dirname, "tokens.json");
 const { MercadoPagoConfig, Preference } = require("mercadopago");
 const PORT = process.env.PORT || 3000;
 
@@ -14,13 +17,26 @@ const mercadopago = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_TOKEN,
 });
 
+function lerTokens() {
+  try {
+    const data = fs.readFileSync(TOKEN_FILE, "utf8");
+    return JSON.parse(data);
+  } catch (e) {
+    return {};
+  }
+}
+
+function salvarTokens(tokens) {
+  fs.writeFileSync(TOKEN_FILE, JSON.stringify(tokens, null, 2), "utf8");
+}
+
 app.post("/criar-fatura", async (req, res) => {
   try {
     const { productName, amount } = req.body;
-
     // Gera um token simples para usar na URL de sucesso
     const token = Math.random().toString(36).substring(2);
-    tokensSalvos[token] = {
+    const tokens = lerTokens();
+    tokens[token] = {
       nome: req.body.nome,
       email: req.body.email,
       telefone: req.body.telefone,
@@ -28,6 +44,7 @@ app.post("/criar-fatura", async (req, res) => {
       productName,
       arquivo: req.body.arquivo,
     };
+    salvarTokens(tokens);
 
     const preference = new Preference(mercadopago);
 
@@ -35,7 +52,8 @@ app.post("/criar-fatura", async (req, res) => {
       body: {
         items: [
           {
-            notification_url: "https://tales-santos-backend.onrender.com/webhook-mercadopago",
+            notification_url:
+              "https://tales-santos-backend.onrender.com/webhook-mercadopago",
             title: productName,
             quantity: 1,
             unit_price: Number(amount) / 100,
@@ -133,8 +151,8 @@ app.get("/verificar-pagamento", async (req, res) => {
 });
 
 app.get("/validar-token", (req, res) => {
-  const token = req.query.token;
-  const produto = tokensSalvos[token];
+  const tokens = lerTokens();
+const produto = tokens[token];
 
   if (produto) {
     res.json(produto);
