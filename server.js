@@ -35,8 +35,7 @@ app.post("/criar-fatura", async (req, res) => {
       body: {
         items: [
           {
-            notification_url:
-              "https://tales-santos-backend.onrender.com/webhook-mercadopago",
+            notification_url: "https://tales-santos-backend.onrender.com/webhook-mercadopago",
             title: productName,
             quantity: 1,
             unit_price: Number(amount) / 100,
