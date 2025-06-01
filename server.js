@@ -50,7 +50,7 @@ app.post("/criar-fatura", async (req, res) => {
           },
         },
         back_urls: {
-          success: `https://talessantos-mu.vercel.app/aguardando.html?token=${token}`,
+          success: `https://talessantos-mu.vercel.app/sucesso.html?token=${token}`,
           failure: `https://talessantos-mu.vercel.app/falha.html`,
           pending: `https://talessantos-mu.vercel.app/aguardando.html?token=${token}`,
         },
