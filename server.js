@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 require("dotenv").config();
+const path = require("path");
 const app = express();
 const tokensSalvos = {};
 const { MercadoPagoConfig, Preference, Payment } = require("mercadopago");
