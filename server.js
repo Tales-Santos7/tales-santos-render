@@ -184,6 +184,11 @@ app.use(
   })
 );
 
+// Redireciona todas as rotas desconhecidas para o index.html (SPA)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
 app.listen(PORT, () => {
   console.log(
     `Servidor rodando na porta https://tales-santos-backend-ofl3.onrender.com/`
