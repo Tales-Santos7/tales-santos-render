@@ -22,7 +22,7 @@ app.post("/criar-fatura", async (req, res) => {
     // Gera um token simples para usar na URL de sucesso
     const token = Math.random().toString(36).substring(2);
     tokensSalvos[token] = {
-      nome: req.body.nome,
+      cliente_nome: req.body.nome,
       email: req.body.email,
       telefone: req.body.telefone,
       taxId: req.body.taxId,
