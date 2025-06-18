@@ -57,7 +57,7 @@ app.post("/criar-fatura", async (req, res) => {
         },
         auto_return: "approved",
         notification_url:
-          "https://tales-santos-backend-ofl3.onrender.com/webhook-mercadopago",
+          "https://tales-santos-backend-chb9.onrender.com/webhook-mercadopago",
         external_reference: token,
       },
     });
@@ -192,6 +192,6 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(
-    `Servidor rodando na porta https://tales-santos-backend-ofl3.onrender.com/`
+    `Servidor rodando na porta https://tales-santos-backend-chb9.onrender.com/`
   );
 });
