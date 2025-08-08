@@ -45,7 +45,7 @@ app.post("/criar-fatura", async (req, res) => {
         .json({ error: "O telefone não pode ter mais de 15 dígitos." });
     }
 
-    if (taxId.length !== 9) {
+    if (taxId.length !== 11) {
       return res
         .status(400)
         .json({ error: "O NIF deve ter exatamente 9 dígitos." });
