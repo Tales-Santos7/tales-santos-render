@@ -17,38 +17,69 @@ const mercadopago = new MercadoPagoConfig({
 
 app.post("/criar-fatura", async (req, res) => {
   try {
-    const { productName, amount } = req.body;
+    const { nome, email, telefone, taxId, productName, amount, arquivo } =
+      req.body;
 
-    // Gera um token simples para usar na URL de sucesso
+    // ====== Validações ======
+    if (!nome || !email || !telefone || !taxId || !productName || !amount) {
+      return res
+        .status(400)
+        .json({ error: "Todos os campos são obrigatórios." });
+    }
+
+    if (nome.length > 100) {
+      return res
+        .status(400)
+        .json({ error: "O nome não pode ter mais de 100 caracteres." });
+    }
+
+    if (email.length > 150) {
+      return res
+        .status(400)
+        .json({ error: "O e-mail não pode ter mais de 150 caracteres." });
+    }
+
+    if (telefone.length > 15) {
+      return res
+        .status(400)
+        .json({ error: "O telefone não pode ter mais de 15 dígitos." });
+    }
+
+    if (taxId.length !== 9) {
+      return res
+        .status(400)
+        .json({ error: "O NIF deve ter exatamente 9 dígitos." });
+    }
+
+    if (isNaN(amount) || amount <= 0) {
+      return res
+        .status(400)
+        .json({ error: "O valor deve ser um número positivo." });
+    }
+
+    // ====== Geração do token só depois de validar ======
     const token = Math.random().toString(36).substring(2);
     tokensSalvos[token] = {
-      cliente_nome: req.body.nome,
-      email: req.body.email,
-      telefone: req.body.telefone,
-      taxId: req.body.taxId,
+      cliente_nome: nome,
+      email,
+      telefone,
+      taxId,
       productName,
-      arquivo: req.body.arquivo,
+      arquivo,
     };
 
+    // ====== Criação da preferência no MercadoPago ======
     const preference = new Preference(mercadopago);
-
     const preferenceResponse = await preference.create({
       body: {
         items: [
-          {
-            title: productName,
-            quantity: 1,
-            unit_price: Number(amount) / 100,
-          },
+          { title: productName, quantity: 1, unit_price: Number(amount) / 100 },
         ],
         payer: {
-          email: req.body.email,
-          name: req.body.nome,
+          email,
+          name: nome,
           surname: "Cliente",
-          identification: {
-            type: "CPF",
-            number: req.body.taxId,
-          },
+          identification: { type: "CPF", number: taxId },
         },
         back_urls: {
           success: `https://talessantos-mu.vercel.app/sucesso.html?token=${token}`,
@@ -62,30 +93,16 @@ app.post("/criar-fatura", async (req, res) => {
       },
     });
 
-    console.log(
-      "Resposta completa da criação da preferência:",
-      preferenceResponse
-    );
-
     const paymentLink = preferenceResponse.init_point;
-
     if (!paymentLink) {
       throw new Error("Não foi possível gerar o link de pagamento");
     }
-
-    console.log("Init point:", preferenceResponse.init_point);
-    console.log(
-      "Raw preferenceResponse:",
-      JSON.stringify(preferenceResponse, null, 2)
-    );
 
     res.status(200).json({
       url: paymentLink,
       id: preferenceResponse.id,
       product: productName,
     });
-
-    console.log("Retorno ao frontend:", { url: paymentLink });
   } catch (error) {
     console.error(
       "Erro ao criar fatura:",
