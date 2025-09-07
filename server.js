@@ -202,6 +202,8 @@ app.use(
   })
 );
 
+app.use("/downloads", express.static(path.join(__dirname, "downloads")));
+
 // Redireciona todas as rotas desconhecidas para o index.html (SPA)
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
