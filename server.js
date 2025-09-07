@@ -65,7 +65,7 @@ app.post("/criar-fatura", async (req, res) => {
       telefone,
       taxId,
       productName,
-      arquivo,
+      arquivo: `https://tales-santos-backend-chb9.onrender.com/downloads/${path.basename(arquivo)}`,
     };
 
     // ====== Criação da preferência no MercadoPago ======
