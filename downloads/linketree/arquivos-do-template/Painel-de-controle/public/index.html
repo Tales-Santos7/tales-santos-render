@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel de Controle</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="./env.js"></script>
+  <script src="./src/js/script.js"></script>
+  <link rel="stylesheet" href="./src/css/style.css" />
+</head>
+
+<body>
+  <!-- NAVEGAÇÃO LATERAL -->
+  <aside>
+    <h1>Painel</h1>
+    <div class="nav-link active" data-target="sec-foto">
+      <span class="material-icons">image</span> Foto de Perfil
+    </div>
+    <div class="nav-link" data-target="form-perfil">
+      <span class="material-icons">person</span> Dados Pessoais
+    </div>
+    <div class="nav-link" data-target="form-link">
+      <span class="material-icons">link</span> Adicionar Link
+    </div>
+    <div class="nav-link" data-target="sec-lista">
+      <span class="material-icons">list</span> Meus Links
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main>
+    <section id="sec-foto" class="card active">
+      <h2>Foto de Perfil</h2>
+      <img id="imagemAtual" src="" alt="Imagem atual" style="display: none;" />
+      <label for="avatarInput">Upload de Imagem</label>
+      <input type="file" id="avatarInput" accept="image/*" />
+      <button id="btnAtualizarFoto">Atualizar</button>
+      <button class="danger" id="btnExcluirImagem">Excluir</button>
+    </section>
+
+    <form id="form-perfil" class="card" novalidate>
+      <h2>Dados do Perfil</h2>
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" required />
+      <label for="bio">Bio</label>
+      <input type="text" id="bio" required />
+      <label for="footer">Rodapé</label>
+      <input type="text" id="footer" required />
+      <button type="submit">Salvar Perfil</button>
+    </form>
+
+    <form id="form-link" class="card" novalidate>
+      <h2>Adicionar Link</h2>
+      <label for="title">Título</label>
+      <input type="text" id="title" required />
+      <label for="url">URL</label>
+      <input type="url" id="url" required />
+      <input type="hidden" id="linkId" />
+      <button type="submit">Salvar Link</button>
+    </form>
+
+    <section id="sec-lista" class="card link-list">
+      <h2>Meus Links</h2>
+      <div id="links"></div>
+    </section>
+  </main>
+  <script>document.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", () => {
+        // ativa o link atual
+        document
+          .querySelectorAll(".nav-link")
+          .forEach((l) => l.classList.remove("active"));
+        link.classList.add("active");
+
+        // oculta todas as seções
+        document
+          .querySelectorAll(".card")
+          .forEach((sec) => sec.classList.remove("active"));
+
+        // mostra a seção alvo, se existir
+        const alvo = document.getElementById(link.dataset.target);
+        if (alvo) alvo.classList.add("active");
+      });
+    });
+  </script>
+</body>
+
+</html>

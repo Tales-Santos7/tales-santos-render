@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User</title>
+  <!-- <link rel="icon" type="image/png" sizes="16x16" href="./src/img/favicon-16x16.png"> -->
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://kit.fontawesome.com/959c1b1c33.js" crossorigin="anonymous"></script>
+   <script src="./env.js"></script>
+  <script src="./src/js/scripts.js"></script>
+  <link rel="stylesheet" href="./src/css/style.css">
+  <link rel="stylesheet" href="./src/css/responsivo.css">
+</head>
+
+<body>
+
+  <!-- MENU MOBILE -->
+  <ul class="none">
+    <li class="dropdown">
+      </a>
+      <a id="toggle" class="dropbtn"><i class="ri-menu-line"></i></a>
+      <div class="dropdown-content">
+        <img id="hero-photo-dropdown" src="" alt="Img Mobile" style="background-color: #0d0d17;">
+        <a href="./index.html" style=" background-color: #F4ECDF; color: #0d0d17;">Home</a>
+        <i class="icone-dropdown icone-dropdown-2 ri-user-3-fill"></i> <a href="#sobre">Sobre mim</a>
+        <i class="icone-dropdown icone-dropdown-3 ri-multi-image-fill"></i><a href="#galeria">
+          Galeria</a>
+        <i class="icone-dropdown icone-dropdown-3 ri-news-fill"></i><a href="#blog">
+          Blog</a>
+        <i class="icone-dropdown icone-dropdown-2 ri-phone-fill"></i><a href="#contato"> Contato</a>
+        <div class="mobile-social-icons fim-drop" id="social-icons-bottom"></div>
+        <span>Quem sonha, conquista🌟</span>
+      </div>
+    </li>
+  </ul>
+  <!-- FIM DO MENU MOBILE -->
+
+  <div class="container">
+
+    <!-- NAV BAR -->
+    <header class="header">
+      <nav class="menu">
+        <a href="https://demo-portfolio-digital.vercel.app/">
+          <li class="logo-tipo" id="logo-container">
+            <span id="logo-text">USER</span><br>
+            <small>Lifestyle - Beauty - Study</small>
+          </li>
+        </a>
+        <ul class="nav-links">
+          <li><a class="size-nav" href="https://demo-portfolio-digital.vercel.app/">Home</a></li>
+          <li><a class="size-nav" href="#sobre">Sobre</a></li>
+          <li><a class="size-nav" href="#modelos">Galeria</a></li>
+          <li><a class="size-nav" href="#blog">Blog</a></li>
+          <li><a class="size-nav" href="#contato">Contato</a></li>
+          <ul class="nav-social-icons" id="social-icons-top"></ul>
+        </ul>
+      </nav>
+    </header>
+    <!-- FIM DO NAV BAR -->
+
+    <!-- SEÇÃO PRINCIPAL -->
+    <main class="main-section">
+      <div class="overlay"></div>
+      <div id="hero-image-container">
+        <img id="hero-photo" src="" alt="Foto Hero" style="display: none;">
+      </div>
+      <div id="" class="content">
+        <h1><span>BELEZA ESTÁ</span><br> POR TUDO</h1>
+        <p>
+          Sou um parágrafo. Clique aqui para me editar e adicionar seu texto. Sou um ótimo lugar para contar sua
+          história e permitir que seus visitantes saibam um pouco mais sobre você.
+        </p>
+        <a href="#sobre" class="btn">SAIBA MAIS</a>
+      </div>
+    </main>
+    <!-- FIM DA SEÇÃO PRINCIPAL -->
+  </div>
+
+  <!-- SEÇÃO GALERIA -->
+  <section id="modelos" class="galeria">
+    <h2 id="galeria">✨Galeria</h2>
+    <div id="galeria-container">
+    </div>
+  </section>
+  <!-- FIM DA SEÇÃO GALERIA -->
+
+  <!-- SEÇÃO SOBRE -->
+  <section id="sobre" class="sobre">
+    <h2 id="about-title">Título Padrão</h2>
+    <p id="about-description">Descrição padrão.</p>
+  </section>
+  <!-- FIM DA SEÇÃO SOBRE -->
+
+  <!-- SEÇÃO BLOG -->
+  <section id="blog" class="blog">
+    <h2>Blog</h2>
+    <div class="blog-posts" id="blog-posts-container"></div>
+    <div style="margin-top: 1rem;">
+      <button id="load-more" class="btn-post-more" style="display: none;">Mostrar mais</button>
+      <button id="show-less" class="btn-post-more" style="display: none; margin-left: 10px;">Mostrar menos</button>
+    </div>
+  </section>
+  <!-- FIM DA SEÇÃO BLOG -->
+
+  <!-- RODAPÉ -->
+  <footer class="rodape">
+    <div class="container-rodape">
+      <div class="linha">
+        <div class="rodape-col-2">
+          <a href="https://demo-portfolio-digital.vercel.app/">
+            <img id="footer-logo" src="" alt="Logo" />
+          </a>
+        </div>
+
+        <div id="contato" class="rodape-col-3">
+          <h3>Mais informações</h3>
+          <ul>
+            <li><a href="https://demo-portfolio-digital.vercel.app/">Home</a></li>
+            <li><a href="#sobre">Sobre mim</a></li>
+            <li><a href="#modelos">Galeria</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#contato">Contato</a></li>
+          </ul>
+        </div>
+
+        <!-- SEÇÃO CONTATO -->
+        <div class="rodape-col-4">
+          <h3>Redes Sociais</h3>
+          <ul>
+          </ul>
+        </div>
+        <script>
+          fetch(`${apiUrl}/social-links`)
+            .then((response) => response.json())
+            .then((links) => {
+              const socialList = document.querySelector(".rodape-col-4 ul");
+              if (!socialList) return;
+              socialList.innerHTML = "";
+
+              links.forEach((link) => {
+                const listItem = document.createElement("li");
+                const anchor = document.createElement("a");
+                anchor.href = link.url;
+                anchor.textContent = link.name;
+                anchor.target = "_blank";
+                listItem.appendChild(anchor);
+                socialList.appendChild(listItem);
+              });
+            })
+            .catch((error) => console.error("Erro ao carregar redes sociais:", error));
+        </script>
+        <!-- FIM DA SEÇÃO CONTATO -->
+      </div>
+    </div>
+    <hr>
+    <p class="direitos">&copy; 2025 <a href="https://demo-portfolio-digital.vercel.app/"
+        style="color: #fff; background-color: rgba(0, 0, 0, 0.308); padding: 5px; border-radius: 8px; text-decoration: none;">User</a>
+      - Todos os direitos reservados.</p>
+  </footer>
+  <!-- FIM DO RODAPÉ -->
+
+  <script src="./src/js/menuMobile.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</body>
+
+</html>
